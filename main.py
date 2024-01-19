@@ -1,9 +1,22 @@
 import json
+import ctypes
 import webview
 import threading
 import watchfiles
 
 class Api:
+
+  def getUsername(self):
+    GetUserNameEx = ctypes.windll.secur32.GetUserNameExW
+    NameDisplay = 3
+ 
+    size = ctypes.pointer(ctypes.c_ulong(0))
+    GetUserNameEx(NameDisplay, None, size)
+ 
+    nameBuffer = ctypes.create_unicode_buffer(size.contents.value)
+    GetUserNameEx(NameDisplay, nameBuffer, size)
+    return {'user': nameBuffer.value}
+  
   def getConfig(self):
     config = None
     try:
@@ -34,7 +47,7 @@ if __name__ == '__main__':
     title = '.: OFX-Tools :.',
     url = './templates/index.html',
     width=1200,
-    height=650,
+    height=660,
     js_api=api
   )
   
