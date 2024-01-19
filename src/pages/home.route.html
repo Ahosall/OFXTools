@@ -1,73 +1,53 @@
-<h3>
-  <small class="text-muted">Bem-vindo</small>
-  <span id="username">{user}</span>!
-</h3>
+<figure class="text-center">
+  <blockquote class="blockquote">
+    <p>Olá <span id="username">{username}</span>, bem vindo (a)!</p>
+  </blockquote>
+</figure>
 
-<div class="card border border-secondary">
-  <h5 class="card-header border-secondary">Configurações</h5>
+<div class="card">
+  <div class="card-header">Configurações Gerais</div>
   <div class="card-body">
-    <p class="card-text">Configurações gerais do OFX-Tools</p>
-    <div class="input-group mb-3">
-      <div class="form-outline" data-mdb-input-init>
-        <input
-          type="text"
-          id="real_companies_path"
-          class="form-control form-control-lg"
-        />
-        <label class="form-label" for="companiesPath">Lucro Real</label>
-      </div>
-    </div>
-    <div class="input-group mb-3">
-      <div class="form-outline" data-mdb-input-init>
-        <input
-          type="text"
-          id="simples_companies_path"
-          class="form-control form-control-lg"
-        />
-        <label class="form-label" for="companiesPath">Simples Nacional</label>
-      </div>
-    </div>
-    <div class="input-group mb-1">
-      <div class="form-outline" data-mdb-input-init>
-        <input
-          type="text"
-          id="presumido_companies_path"
-          class="form-control form-control-lg"
-        />
-        <label class="form-label" for="companiesPath">Lucro Presumido</label>
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <label for="companies_folders" class="form-label"
-        >Selecione suas empresas</label
-      >
+    <div class="mb-2">
+      <label for="presumido_path" class="form-label">Lucro Presumido:</label>
       <input
-        type="file"
-        id="companies_folders"
-        class="form-control form-control-lg"
-        webkitdirectory
-        directory
-        multiple
+        class="form-control form-control-sm"
+        id="presumido_path"
+        type="text"
+      />
+    </div>
+    <div class="mb-2">
+      <label for="real_path" class="form-label">Lucro Real:</label>
+      <input class="form-control form-control-sm" id="real_path" type="text" />
+    </div>
+    <div class="mb-2">
+      <label for="simples_path" class="form-label">Simples Nacional:</label>
+      <input
+        class="form-control form-control-sm"
+        id="simples_path"
+        type="text"
       />
     </div>
 
-    <div class="d-flex justify-content-evenly">
-      <div class="btn-group" role="group" aria-label="Basic example">
+    <div class="navbar d-flex">
+      <div
+        class="btn-group"
+        role="manageSettings"
+        aria-label="Settings ACtions"
+      >
         <button
           type="button"
-          class="btn btn-secondary"
-          onclick="initConfig()"
-          data-mdb-ripple-init
+          class="btn btn-warning"
+          onclick="getStorageConfig()"
         >
           Redefinir
         </button>
-        <button
-          type="button"
-          class="btn btn-success"
-          onclick="saveConfig()"
-          data-mdb-ripple-init
-        >
+      </div>
+      <div
+        class="btn-group"
+        role="manageSettings"
+        aria-label="Settings ACtions"
+      >
+        <button type="button" class="btn btn-success" onclick="saveConfig()">
           Salvar
         </button>
       </div>
@@ -75,7 +55,4 @@
   </div>
 </div>
 
-<script src="assets/js/template.js"></script>
-<script>
-  console.log("home!!");
-</script>
+<!-- ::assets/js/home.js:: -->

@@ -1,67 +1,71 @@
-console.log("Oia o Home");
+const presumidoEl = document.getElementById("presumido_path");
+const realEl = document.getElementById("real_path");
+const simplesEl = document.getElementById("simples_path");
+const userEl = document.getElementById("username");
 
-// const realEl = document.getElementById("real_companies_path");
-// const simplesEl = document.getElementById("simples_companies_path");
-// const presumidoEl = document.getElementById("presumido_companies_path");
-// const userEl = document.getElementById("username");
+window.addEventListener("load", () => {
+  getStorageConfig();
+});
 
-// window.addEventListener("load", () => {
-//   getStorageConfig();
-// });
+const initConfig = () => {
+  try {
+    pywebview.api.getConfig().then(async (config) => {
+      if (!config)
+        return console.log("Arquivo de configuração não encontrado!");
 
-// window.addEventListener("pywebviewready", () => {
-//   initConfig();
-// });
+      Object.keys(config).forEach((key) =>
+        window.localStorage.setItem(key, config[key])
+      );
 
-// const initConfig = () => {
-//   try {
-//     pywebview.api.getConfig().then(async (config) => {
-//       if (!config)
-//         return console.log("Arquivo de configuração não encontrado!");
+      getStorageConfig();
+    });
 
-//       Object.keys(config).forEach((key) =>
-//         window.localStorage.setItem(key, config[key])
-//       );
+    pywebview.api.getUsername().then((res) => {
+      window.localStorage.setItem("username", res.user.split(" ")[0]);
+      getStorageConfig();
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-//       getStorageConfig();
-//     });
+const saveConfig = () => {
+  console.log(realEl.value, simplesEl.value, presumidoEl.value);
+  realEl.classList =
+    presumidoEl.value.trim() === ""
+      ? presumidoEl.classList.toString() + " is-invalid"
+      : presumidoEl.classList.toString().replace("is-invalid", "");
 
-//     pywebview.api.getUsername().then((res) => {
-//       window.localStorage.setItem("username", res.user.split(" ")[0]);
-//       getStorageConfig();
-//     });
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
+  presumidoEl.classList =
+    realEl.value.trim() === ""
+      ? realEl.classList.toString() + " is-invalid"
+      : realEl.classList.toString().replace("is-invalid", "");
 
-// const saveConfig = () => {
-//   console.log(realEl.value, simplesEl.value, presumidoEl.value);
-//   if (realEl.value.trim() === "") {
-//     return (realEl.classList += " is-invalid");
-//   } else if (simplesEl.value.trim() === "") {
-//     return (simplesEl.classList += " is-invalid");
-//   } else if (presumidoEl.value.trim() === "") {
-//     return (presumidoEl.classList += " is-invalid");
-//   }
+  simplesEl.classList =
+    simplesEl.value.trim() === ""
+      ? simplesEl.classList.toString() + " is-invalid"
+      : simplesEl.classList.toString().replace("is-invalid", "");
 
-//   pywebview.api.saveConfig({
-//     realPath: realEl.value,
-//     simplesPath: simplesEl.value,
-//     presumidoPath: presumidoEl.value,
-//   });
-// };
+  pywebview.api.saveConfig({
+    realPath: realEl.value,
+    simplesPath: simplesEl.value,
+    presumidoPath: presumidoEl.value,
+  });
+};
 
-// const getStorageConfig = () => {
-//   realEl.value = window.localStorage.getItem("realPath");
-//   simplesEl.value = window.localStorage.getItem("simplesPath");
-//   presumidoEl.value = window.localStorage.getItem("presumidoPath");
-//   userEl.innerText = window.localStorage.getItem("username");
+const getStorageConfig = () => {
+  userEl.innerText = window.localStorage.getItem("username");
+  presumidoEl.value = window.localStorage.getItem("presumidoPath");
+  realEl.value = window.localStorage.getItem("realPath");
+  simplesEl.value = window.localStorage.getItem("simplesPath");
 
-//   if (realEl.value !== null && realEl.value.trim() !== "")
-//     realEl.classList += " active";
-//   if (simplesEl.value !== null && simplesEl.value.trim() !== "")
-//     simplesEl.classList += " active";
-//   if (presumidoEl.value !== null && presumidoEl.value.trim() !== "")
-//     presumidoEl.classList += " active";
-// };
+  presumidoEl.classList = presumidoEl.classList
+    .toString()
+    .replace("is-invalid", "");
+  realEl.classList = realEl.classList.toString().replace("is-invalid", "");
+  simplesEl.classList = simplesEl.classList
+    .toString()
+    .replace("is-invalid", "");
+};
+
+initConfig();

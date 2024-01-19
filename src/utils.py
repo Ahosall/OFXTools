@@ -1,4 +1,6 @@
 import os
+import json
+import ctypes
 
 # SETTINGS
 PAGES_PATH = 'src/pages/'
@@ -23,12 +25,50 @@ def getRoutes():
     if path.endswith('route.html'):
       with open(f'{path}', 'r+', encoding='utf-8') as f:
         threat = path.replace(PAGES_PATH, '').replace('/', '-')
+        lines = f.readlines()
+        findScript = [line for line in lines if line.upper().startswith('<!-- ::')]
+        script = findScript[0] if len(findScript) else None
+        if script:
+          with open("src/"+script.split("::")[1], 'r+') as f:
+            script = f.read()
         _routes.append({
           'path': extends(threat), 
-          'doc': f.read()
+          'doc': ''.join(lines),
+          'script': script
         })
   return _routes
 
 class Api:
+  def getUsername(self):
+    GetUserNameEx = ctypes.windll.secur32.GetUserNameExW
+    NameDisplay = 3
+ 
+    size = ctypes.pointer(ctypes.c_ulong(0))
+    GetUserNameEx(NameDisplay, None, size)
+ 
+    nameBuffer = ctypes.create_unicode_buffer(size.contents.value)
+    GetUserNameEx(NameDisplay, nameBuffer, size)
+    return {'user': nameBuffer.value}
+  
+  def getConfig(self):
+    config = None
+    try:
+      with open('./config.json', 'r+') as f:
+        config = json.loads(f.read())
+
+      return config
+    except Exception as e:
+      print(e)
+      return None
+    
+  def saveConfig(self, data: dict) -> bool:
+    try:
+      with open('./config.json', 'w+') as f:
+        f.write(json.dumps(data))
+      return True
+    except Exception as e:
+      print(e)
+      return False
+    
   def routes(self):
     return getRoutes()
