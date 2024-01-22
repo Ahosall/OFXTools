@@ -1,13 +1,26 @@
+import os
 import webview
 import threading
 import watchfiles
 
 from src.utils import Api
 
+def create_and_delete_file():
+  try:
+    with open('./src/.nocontent', 'w') as file:
+      file.write('No Content')
+    
+    os.remove('./src/.nocontent')
+  except Exception as e:
+    print(f"Erro: {e}")
+
 def watch_and_reload(window, event):
-  print(window, 'Watch Load', event)
-  for change in watchfiles.watch('./src/'):
-    print("Atualizae")
+  print('Assiste os arquivos ae')
+  files = watchfiles.watch('./src/')
+  for change in files:
+    if not event.is_set():
+      break
+    
     window.evaluate_js('window.location.reload()')
 
 if __name__ == '__main__':
@@ -29,9 +42,10 @@ if __name__ == '__main__':
   reload_thread.start()
   
   # TODO: Resolver BUG do refresh
-  webview.start(None, window,  http_server=True, debug=True)
+  webview.start(http_server=True, debug=True)
 
   thread_running.clear()
+  create_and_delete_file()  
   reload_thread.join()
 
   print('exitted successfully!')
