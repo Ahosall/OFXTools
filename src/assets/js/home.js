@@ -3,10 +3,6 @@ const realEl = document.getElementById("real_path");
 const simplesEl = document.getElementById("simples_path");
 const userEl = document.getElementById("username");
 
-window.addEventListener("load", () => {
-  getStorageConfig();
-});
-
 const initConfig = () => {
   try {
     pywebview.api.getConfig().then(async (config) => {
@@ -69,3 +65,4 @@ const getStorageConfig = () => {
 };
 
 initConfig();
+getStorageConfig();

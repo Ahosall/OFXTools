@@ -15,7 +15,7 @@ def extends(entry):
 
   for r in replaces:
     entry = entry.replace(r[0], r[1])
-  return f'/{entry}'
+  return f'/{entry[:-1] if not entry == "" and entry[-1] == "/" else entry}'
 
 def getRoutes():
   _routes = []
@@ -29,7 +29,7 @@ def getRoutes():
         findScript = [line for line in lines if line.upper().startswith('<!-- ::')]
         script = findScript[0] if len(findScript) else None
         if script:
-          with open("src/"+script.split("::")[1], 'r+') as f:
+          with open("src/"+script.split("::")[1], 'r+', encoding='utf-8') as f:
             script = f.read()
         _routes.append({
           'path': extends(threat), 
@@ -38,6 +38,14 @@ def getRoutes():
         })
   return _routes
 
+def getCompanies(config):
+  _companies = []
+  for path in list(config.keys()):
+    for root, folders, files in os.walk(config[path]):
+      for folder in folders:
+        _companies.append(folder)
+      break
+  return _companies
 class Api:
   def getUsername(self):
     GetUserNameEx = ctypes.windll.secur32.GetUserNameExW
@@ -69,6 +77,9 @@ class Api:
     except Exception as e:
       print(e)
       return False
-    
+  
+  def companies(self):
+    return getCompanies(self.getConfig())
+
   def routes(self):
     return getRoutes()
